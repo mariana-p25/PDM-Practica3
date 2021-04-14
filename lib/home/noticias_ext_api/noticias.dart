@@ -115,7 +115,7 @@ class _NoticiasState extends State<Noticias> {
                 ),
                 Expanded(
                   child: FutureBuilder(
-                    future: NewsRepository().getAvailableNoticias("sports"),
+                    future: NewsRepository().getAvailableNoticias(0, "sports"),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Center(

@@ -15,18 +15,32 @@ class NewsRepository {
   }
 
   NewsRepository._internal();
-  Future<List<New>> getAvailableNoticias(String query) async {
+  Future<List<New>> getAvailableNoticias(int n, String query) async {
     // TODO: utilizar variable q="$query" para buscar noticias en especifico
     // https://newsapi.org/v2/top-headlines?country=mx&q=futbol&category=sports&apiKey&apiKey=laAPIkey
     // crear modelos antes
 
-    final _uri = Uri(
-      scheme: 'https',
-      host: 'newsapi.org',
-      path: 'v2/top-headlines',
-      queryParameters: {"country": "mx", "category": query, "apiKey": API_KEY},
-    );
-    // TODO: completar request y deserializacion
+    var _uri;
+    if (n == 0) {
+      _uri = Uri(
+        scheme: 'https',
+        host: 'newsapi.org',
+        path: 'v2/top-headlines',
+        queryParameters: {
+          "country": "mx",
+          "category": "sports",
+          "apiKey": API_KEY
+        },
+      );
+    } else {
+      _uri = Uri(
+        scheme: 'https',
+        host: 'newsapi.org',
+        path: 'v2/top-headlines',
+        queryParameters: {"country": "mx", "q": "${query}", "apiKey": API_KEY},
+      );
+    }
+    
     try {
       final response = await get(_uri);
       if (response.statusCode == HttpStatus.ok) {

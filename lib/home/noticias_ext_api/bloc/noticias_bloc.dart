@@ -21,7 +21,7 @@ class NoticiasBloc extends Bloc<NoticiasEvent, NoticiasState> {
       try {
         yield NoticiasLoadingState();
         _word = event.queryText;
-        var news = await NewsRepository().getAvailableNoticias(_word);
+        var news = await NewsRepository().getAvailableNoticias(1, _word);
         print(news);
         yield NoticiasLoadedState(
           newsList: news.toList(),

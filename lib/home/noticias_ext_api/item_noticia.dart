@@ -1,75 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:google_login/models/new.dart';
+import 'package:extended_image/extended_image.dart';
 
-class ItemNoticia extends StatelessWidget {
+import 'item_noticias_details.dart';
+
+class ItemNoticia extends StatefulWidget {
   final New noticia;
   ItemNoticia({Key key, @required this.noticia}) : super(key: key);
+  
+  @override
+  _ItemNoticiaState createState() => _ItemNoticiaState();
+}
 
+class _ItemNoticiaState extends State<ItemNoticia> {
   @override
   Widget build(BuildContext context) {
-// TODO: Cambiar image.network por Extended Image con place holder en caso de error o mientras descarga la imagen
+    var noticia = widget.noticia;
+
     return Container(
       child: Padding(
         padding: EdgeInsets.all(6.0),
-        child: Card(
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Image.network(
-                  "${noticia.urlToImage}",
-                  height: 132,
-                  fit: BoxFit.cover,
+        child: GestureDetector(
+        onTap: _openDetails,
+          child: Card(
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: ExtendedImage.network(
+                    noticia.urlToImage==null ? 'https://cima-afrique.org/cima/images/not-available.png':noticia.urlToImage,
+                    height: MediaQuery.of(context).size.height / 5.7,
+                    fit: BoxFit.cover,
+                    cache: true,
+                  )
+                  /*Image.network(
+                    "${noticia.urlToImage==null ? :noticia.urlToImage}",
+                    height: MediaQuery.of(context).size.height / 5.5,
+                    fit: BoxFit.cover,
+                  ),*/
                 ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "${noticia.title}",
-                        maxLines: 1,
-                        overflow: TextOverflow.clip,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 14,
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "${noticia.title}",
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "${noticia.publishedAt}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          color: Colors.grey,
-                          fontSize: 12,
+                        Text(
+                          "${noticia.publishedAt}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        "${noticia.description ?? "Descripcion no disponible"}",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        "${noticia.author ?? "Autor no disponible"}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 12,
+                        SizedBox(height: 16),
+                        Text(
+                          "${noticia.description ?? "Descripcion no disponible"}",
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 16),
+                        Text(
+                          "${noticia.author ?? "Autor no disponible"}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+  void _openDetails() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return ItemNewDetailsPage(
+            noticia: widget.noticia,
+          );
+        },
       ),
     );
   }

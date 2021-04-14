@@ -118,8 +118,10 @@ class _AgregarNoticiaState extends State<AgregarNoticia> {
             ),
             MaterialButton(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-              color: Colors.greenAccent,
-              child: Text("Guardar noticia"),
+              color: Colors.teal,
+              child: Text("Guardar noticia",
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 newsBloc.add(
                   SaveNewElementEvent(
@@ -131,6 +133,7 @@ class _AgregarNoticiaState extends State<AgregarNoticia> {
                     ),
                   ),
                 );
+                BlocProvider.of<MyNewsBloc>(context).add(RequestAllNewsEvent());
               },
             ),
           ],
