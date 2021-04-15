@@ -133,7 +133,6 @@ class _AgregarNoticiaState extends State<AgregarNoticia> {
                     ),
                   ),
                 );
-                BlocProvider.of<MyNewsBloc>(context).add(RequestAllNewsEvent());
               },
             ),
           ],
