@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_login/models/new.dart';
 import 'package:extended_image/extended_image.dart';
@@ -47,14 +48,47 @@ class _ItemNoticiaState extends State<ItemNoticia> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          "${noticia.title}",
-                          maxLines: 1,
-                          overflow: TextOverflow.clip,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 14,
-                          ),
+                        Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width-180.0,
+                              child: Text(
+                                "${noticia.title}",
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: noticia.source == null
+                              ? Container()
+                              : IconButton(
+                                icon: Icon(Icons.upload,
+                                    color: Colors.black),
+                                onPressed: () async {
+                                  try {
+                                    await FirebaseFirestore.instance
+                                        .collection("noticias")
+                                        .add(noticia.toJson());
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                          content: Text("Guardado en Firebase"),
+                                        ),
+                                      );
+                                    return true;
+                                  } catch (e) {
+                                    print("Error: $e");
+                                    return false;
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                         Text(
                           "${noticia.publishedAt}",
