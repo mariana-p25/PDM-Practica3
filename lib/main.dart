@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'models/new.dart';
+import 'models/source.dart';
 
 void main() async {
   // inicializar firebase
@@ -16,7 +17,7 @@ void main() async {
   await Firebase.initializeApp();
 
   final _localStorage = await getExternalStorageDirectory();
-  Hive..init(_localStorage.path)..registerAdapter(NewAdapter());
+  Hive..init(_localStorage.path)..registerAdapter(NewAdapter())..registerAdapter(SourceAdapter());
   await Hive.openBox("Noticias");
 
   runApp(

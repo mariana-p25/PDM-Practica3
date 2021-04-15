@@ -120,7 +120,8 @@ class _NoticiasState extends State<Noticias> {
                   child: FutureBuilder(
                     future: NewsRepository().getAvailableNoticias(0, "sports"),
                     builder: (context, snapshot) {
-                      print(snapshot.hasError);
+                      print("error ${snapshot.hasError}");
+                      print("data ${snapshot.hasData}");
                       if (snapshot.hasError) {
                         /*List<New> sportsList = _newsBox.get("noticias");
                         print(sportsList);

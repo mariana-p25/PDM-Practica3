@@ -12,18 +12,13 @@ part 'noticias_state.dart';
 
 class NoticiasBloc extends Bloc<NoticiasEvent, NoticiasState> {
   NoticiasBloc() : super(NoticiasInitial());
-  String _word = "sports";
-  Box _newsBox = Hive.box("Noticias");
+  String _word;
+  //Box _newsBox = Hive.box("Noticias");
 
   @override
   Stream<NoticiasState> mapEventToState(
     NoticiasEvent event,
   ) async* {
-    var news = await NewsRepository().getAvailableNoticias(0, "sports");
-    print(news);
-    await _newsBox.put("noticias", news);
-    print("AAAAAAAAA");
-    print(_newsBox.get(""));
     if (event is SearchNewsEvent) {
       try {
         yield NoticiasLoadingState();

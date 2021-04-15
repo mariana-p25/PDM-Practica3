@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:google_login/models/new.dart';
 import 'package:google_login/utils/apikey.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:connectivity/connectivity.dart';
 
@@ -17,11 +18,11 @@ class NewsRepository {
 
   NewsRepository._internal();
   Future<List<New>> getAvailableNoticias(int n, String query) async {
-    // TODO: utilizar variable q="$query" para buscar noticias en especifico
-    // https://newsapi.org/v2/top-headlines?country=mx&q=futbol&category=sports&apiKey&apiKey=laAPIkey
-    // crear modelos antes
+    Box _newsBox = Hive.box("Noticias");
+
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
       var _uri;
       if (n == 0) {
         _uri = Uri(
@@ -53,6 +54,9 @@ class NewsRepository {
           List<dynamic> data = jsonDecode(response.body)["articles"];
           _noticiasList =
               ((data).map((element) => New.fromJson(element))).toList();
+
+          await _newsBox.put("noticias", _noticiasList);
+
           return _noticiasList;
         }
         return [];
