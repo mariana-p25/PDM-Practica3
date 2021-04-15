@@ -17,7 +17,10 @@ void main() async {
   await Firebase.initializeApp();
 
   final _localStorage = await getExternalStorageDirectory();
-  Hive..init(_localStorage.path)..registerAdapter(NewAdapter())..registerAdapter(SourceAdapter());
+  Hive
+    ..init(_localStorage.path)
+    ..registerAdapter(NewAdapter())
+    ..registerAdapter(SourceAdapter());
   await Hive.openBox("Noticias");
 
   runApp(

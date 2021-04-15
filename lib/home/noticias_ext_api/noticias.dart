@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_login/models/new.dart';
 import 'package:google_login/utils/news_repository.dart';
 import 'package:hive/hive.dart';
 
@@ -120,25 +119,24 @@ class _NoticiasState extends State<Noticias> {
                   child: FutureBuilder(
                     future: NewsRepository().getAvailableNoticias(0, "sports"),
                     builder: (context, snapshot) {
-                      print("error ${snapshot.hasError}");
-                      print("data ${snapshot.hasData}");
                       if (snapshot.hasError) {
-                        /*List<New> sportsList = _newsBox.get("noticias");
-                        print(sportsList);
-                        return ListView.builder(
-                          itemCount: sportsList.length,
-                          itemBuilder: (context, index) {
-                            return ItemNoticia(
-                              noticia: sportsList[index],
-                            );
-                          },
-                        );*/
                         return Center(
                           child: Text("Algo salio mal",
                               style: TextStyle(fontSize: 32)),
                         );
                       }
                       if (snapshot.hasData) {
+                        if (snapshot.data.length == 0) {
+                          List sportsList = _newsBox.get("noticias");
+                          return ListView.builder(
+                            itemCount: sportsList.length,
+                            itemBuilder: (context, index) {
+                              return ItemNoticia(
+                                noticia: sportsList[index],
+                              );
+                            },
+                          );
+                        }
                         return ListView.builder(
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {

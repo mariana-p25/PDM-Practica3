@@ -55,7 +55,9 @@ class NewsRepository {
           _noticiasList =
               ((data).map((element) => New.fromJson(element))).toList();
 
-          await _newsBox.put("noticias", _noticiasList);
+          if (n == 0) {
+            await _newsBox.put("noticias", _noticiasList);
+          }
 
           return _noticiasList;
         }
