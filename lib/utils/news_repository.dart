@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:google_login/models/new.dart';
 import 'package:google_login/utils/apikey.dart';
 import 'package:http/http.dart';
+import 'package:connectivity/connectivity.dart';
 
 class NewsRepository {
   List<New> _noticiasList;
@@ -19,40 +20,48 @@ class NewsRepository {
     // TODO: utilizar variable q="$query" para buscar noticias en especifico
     // https://newsapi.org/v2/top-headlines?country=mx&q=futbol&category=sports&apiKey&apiKey=laAPIkey
     // crear modelos antes
-
-    var _uri;
-    if (n == 0) {
-      _uri = Uri(
-        scheme: 'https',
-        host: 'newsapi.org',
-        path: 'v2/top-headlines',
-        queryParameters: {
-          "country": "mx",
-          "category": "sports",
-          "apiKey": API_KEY
-        },
-      );
-    } else {
-      _uri = Uri(
-        scheme: 'https',
-        host: 'newsapi.org',
-        path: 'v2/top-headlines',
-        queryParameters: {"country": "mx", "q": "${query}", "apiKey": API_KEY},
-      );
-    }
-    
-    try {
-      final response = await get(_uri);
-      if (response.statusCode == HttpStatus.ok) {
-        List<dynamic> data = jsonDecode(response.body)["articles"];
-        _noticiasList =
-            ((data).map((element) => New.fromJson(element))).toList();
-        return _noticiasList;
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      var _uri;
+      if (n == 0) {
+        _uri = Uri(
+          scheme: 'https',
+          host: 'newsapi.org',
+          path: 'v2/top-headlines',
+          queryParameters: {
+            "country": "mx",
+            "category": "sports",
+            "apiKey": API_KEY
+          },
+        );
+      } else {
+        _uri = Uri(
+          scheme: 'https',
+          host: 'newsapi.org',
+          path: 'v2/top-headlines',
+          queryParameters: {
+            "country": "mx",
+            "q": "${query}",
+            "apiKey": API_KEY
+          },
+        );
       }
+
+      try {
+        final response = await get(_uri);
+        if (response.statusCode == HttpStatus.ok) {
+          List<dynamic> data = jsonDecode(response.body)["articles"];
+          _noticiasList =
+              ((data).map((element) => New.fromJson(element))).toList();
+          return _noticiasList;
+        }
+        return [];
+      } catch (e) {
+        //arroje un error
+        throw "Ha ocurrido un error: $e";
+      }
+    } else {
       return [];
-    } catch (e) {
-      //arroje un error
-      throw "Ha ocurrido un error: $e";
     }
   }
 }
